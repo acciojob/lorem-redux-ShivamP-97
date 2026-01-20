@@ -1,4 +1,8 @@
-const initialState = { data: null, loading: false, error: null };
+const initialState = {
+  data: null,
+  loading: false,
+  error: null,
+};
 
 export const loremReducer = (state = initialState, action) => {
   switch (action.type) {
