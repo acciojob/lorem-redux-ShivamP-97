@@ -1,35 +1,21 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { fetchLorem } from "../actions/loremActions";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLorem } from "../store/actions";
+import Loader from "./Loader";
+import LoremDisplay from "./LoremDisplay";
 
-class App extends Component {
-  componentDidMount() {
-    this.props.fetchLorem();
-  }
+const App = () => {
+  const dispatch = useDispatch();
+  const { loading, data, error } = useSelector((state) => state);
 
-  render() {
-    const { loading, data, error } = this.props;
+  useEffect(() => {
+    dispatch(fetchLorem());
+  }, [dispatch]);
 
-    return (
-      <div>
-        {/* Do not remove the main div */}
-        <h1>Lorem Redux App</h1>
-        {loading && <p>Loading...</p>}
-        {error && <p>Error: {error}</p>}
-        {data && (
-          <p>
-            <strong>{data.title}</strong>: {data.body}
-          </p>
-        )}
-      </div>
-    );
-  }
-}
+  if (loading) return <Loader />;
+  if (error) return <p>Error: {error}</p>;
 
-const mapStateToProps = (state) => ({
-  loading: state.lorem.loading,
-  data: state.lorem.data,
-  error: state.lorem.error,
-});
+  return <LoremDisplay data={data} />;
+};
 
-export default connect(mapStateToProps, { fetchLorem })(App);
+export default App;
